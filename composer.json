@@ -1,5 +1,5 @@
 {
-    "name": "backpack/settings",
+    "name": "tannhatcms/settings",
     "description": "Application settings interface for Laravel 5 using Backpack CRUD.",
     "keywords": [
         "tabacitu",
@@ -25,11 +25,14 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "backpack/crud": "^4.0|^5.0|^6.0"
+        "tannhatcms/crud": "^6"
     },
     "require-dev": {
         "phpunit/phpunit" : "^11.0|^10.0|^9.0|^7.0",
         "scrutinizer/ocular": "~1.1"
+    },
+    "replace": {
+        "backpack/settings": "^3"
     },
     "autoload": {
         "psr-4": {
@@ -53,5 +56,12 @@
                 "Backpack\\Settings\\SettingsServiceProvider"
             ]
         }
-    }
+    },
+    "repositories": [
+        {
+            "name": "tannhatcms/crud",
+            "type": "vcs",
+            "url": "https://github.com/TanNhatCMS/Laravel-Backpack-CRUD-Admin.git"
+        }
+    ]
 }

@@ -20,7 +20,7 @@ class SettingsServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public $routeFilePath = '/routes/backpack/settings.php';
+    public $routeFilePath = '/routes/settings.php';
 
     /**
      * Perform post-registration booting of services.
