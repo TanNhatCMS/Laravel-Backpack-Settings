@@ -3,14 +3,16 @@
 namespace Backpack\Settings\app\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Config;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
+use TanNhatCMS\CachingModel\Contracts\Cacheable;
+use TanNhatCMS\CachingModel\HasCache;
 
-class Setting extends Model
+class Setting extends Model implements Cacheable
 {
-    use CrudTrait;
+    use CrudTrait, HasCache;
 
-    protected $fillable = ['value'];
+    protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {
@@ -19,17 +21,21 @@ class Setting extends Model
         $this->table = config('backpack.settings.table_name');
     }
 
+    public static function primaryCacheKey(): string
+    {
+        return 'key';
+    }
+
     /**
      * Grab a setting value from the database.
      *
      * @param string $key The setting key, as defined in the key db column
-     *
-     * @return string The setting value.
+     * @param null $default
+     * @return string|null The setting value.
      */
-    public static function get($key, $default = null)
+    public static function get(string $key, $default = null): ?string
     {
-        $setting = new self();
-        $entry = $setting->where('key', $key)->first();
+        $entry = static::fromCache()->find($key);
 
         if (!$entry) {
             return $default;
@@ -41,14 +47,14 @@ class Setting extends Model
     /**
      * Update a setting's value.
      *
-     * @param string $key   The setting key, as defined in the key db column
-     * @param string $value The new value.
+     * @param string $key The setting key, as defined in the key db column
+     * @param string|null $value The new value.
      */
-    public static function set($key, $value = null)
+    public static function set(string $key, ?string $value = null): bool
     {
         $database_prefix = config('backpack.settings.database_prefix');
 
-        $prefixed_key = !empty($database_prefix) ? $database_prefix.'.'.$key : $key;
+        $prefixed_key = !empty($database_prefix) ? $database_prefix . '.' . $key : $key;
         $setting = new self();
         $entry = $setting->where('key', $key)->firstOrFail();
 

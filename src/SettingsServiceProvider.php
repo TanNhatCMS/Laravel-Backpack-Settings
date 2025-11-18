@@ -2,6 +2,8 @@
 
 namespace Backpack\Settings;
 
+use Backpack\Settings\app\Models\Setting;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -41,7 +43,7 @@ class SettingsServiceProvider extends ServiceProvider
         // only use the Settings package if the Settings table is present in the database
         if (!App::runningInConsole() && Schema::hasTable(config('backpack.settings.table_name'))) {
             /** @var \Illuminate\Database\Eloquent\Model $modelClass */
-            $modelClass = config('backpack.settings.model', \Backpack\Settings\app\Models\Setting::class);
+            $modelClass = config('backpack.settings.model', Setting::class);
 
             // get all settings from the database
             $settings = $modelClass::all();
@@ -83,6 +85,10 @@ class SettingsServiceProvider extends ServiceProvider
         }
 
         $this->loadRoutesFrom($routeFilePathInUse);
+        // load helper functions
+        foreach (glob(__DIR__ . '/Helper/*.php') as $filename) {
+            require_once $filename;
+        }
     }
 
     /**
@@ -93,7 +99,7 @@ class SettingsServiceProvider extends ServiceProvider
     public function register()
     {
         // register their aliases
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('Setting', config('backpack.settings.model', \Backpack\Settings\app\Models\Setting::class));
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Setting', config('backpack.settings.model', Setting::class));
     }
 }

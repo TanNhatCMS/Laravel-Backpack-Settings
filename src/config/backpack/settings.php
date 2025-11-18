@@ -1,5 +1,7 @@
 <?php
 
+use Backpack\Settings\app\Models\Setting;
+
 return [
 
     /*
@@ -20,7 +22,7 @@ return [
     | Settings Eloquent Model Class
     |
     */
-    'model' => \Backpack\Settings\app\Models\Setting::class,
+    'model' => Setting::class,
 
     /*
     |--------------------------------------------------------------------------
